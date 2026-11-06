@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to publish, for example v1.0.0'
+        description: 'Tag to publish, for example v1.1.0'
         required: true
 
 permissions:
@@ -34,21 +34,37 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Stage the extension
+      - name: Stage both browsers
         run: npm run build
 
-      - name: Zip
+      - name: Zip every shape
         run: |
-          cd dist
-          zip -r "../novelupdates-page-json-${RELEASE_TAG}.zip" .
-          cd ..
-          ls -l "novelupdates-page-json-${RELEASE_TAG}.zip"
+          set -eu
+          VERSION="$(node -p "require('./manifest.json').version")"
+          NAME=nu-page-json
+
+          (cd dist/chrome && zip -qr "../../${NAME}-chrome-v${VERSION}.zip" .)
+          (cd dist/firefox && zip -qr "../../${NAME}-firefox-v${VERSION}.xpi" .)
+
+          # The same tree, under the name a "load unpacked" reader looks for.
+          cp "${NAME}-chrome-v${VERSION}.zip" "${NAME}-chrome-v${VERSION}-unpacked.zip"
+          cp "${NAME}-firefox-v${VERSION}.xpi" "${NAME}-firefox-v${VERSION}-unpacked.zip"
+
+          ls -l *.zip *.xpi
 
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${RELEASE_TAG}" "novelupdates-page-json-${RELEASE_TAG}.zip" \
+          set -eu
+          VERSION="$(node -p "require('./manifest.json').version")"
+          NAME=nu-page-json
+
+          gh release create "${RELEASE_TAG}" \
+            "${NAME}-chrome-v${VERSION}.zip" \
+            "${NAME}-chrome-v${VERSION}-unpacked.zip" \
+            "${NAME}-firefox-v${VERSION}.xpi" \
+            "${NAME}-firefox-v${VERSION}-unpacked.zip" \
             --repo "${GITHUB_REPOSITORY}" \
             --title "${RELEASE_TAG}" \
             --generate-notes

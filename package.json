@@ -1,6 +1,6 @@
 {
   "name": "novelupdates-page-json",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "Chrome and Firefox extension: turn an open Novel Updates series page into one JSON object.",

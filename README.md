@@ -4,20 +4,31 @@ A Chrome and Firefox extension that turns the open Novel Updates series page int
 
 It reads the page in your own browser, where you are already signed in and past the challenge. It does not log in, does not call any API, and sends nothing anywhere.
 
-## Install (unpacked)
+## Install
+
+Every release carries four files. Two are the same tree packed for a browser, two are labelled for a load-unpacked install.
+
+| File | Chrome / Edge | Firefox |
+|---|---|---|
+| `nu-page-json-chrome-v<VERSION>.zip` | unpack it, then **Load unpacked** | |
+| `nu-page-json-chrome-v<VERSION>-unpacked.zip` | identical tree, named for the reader who loads a folder | |
+| `nu-page-json-firefox-v<VERSION>.xpi` | | `about:debugging` accepts it, and it is the file AMO signing takes |
+| `nu-page-json-firefox-v<VERSION>-unpacked.zip` | | unpack it and pick `manifest.json` |
 
 **Chrome / Edge**
 
 1. Open `chrome://extensions`.
 2. Turn on **Developer mode**.
-3. **Load unpacked**, then pick this folder.
+3. **Load unpacked**, then pick the extracted folder that holds `manifest.json`.
 4. Pin the extension so the button stays visible.
 
 **Firefox**
 
 1. Open `about:debugging#/runtime/this-firefox`.
-2. **Load Temporary Add-on**, then pick `manifest.json`.
+2. **Load Temporary Add-on**, then pick `manifest.json` in the extracted folder.
 3. A temporary add-on disappears when Firefox restarts; load it again.
+
+No store signing: Chrome and Firefox both treat an unsigned build as temporary. That is the whole update story while there is no listing.
 
 ## Use it
 
@@ -55,7 +66,16 @@ Names stay in Novel Updates' own vocabulary: the consumer maps them to its own i
 npm run build
 ```
 
-Stages `manifest.json`, `src/` and this README in `dist/`, which is what the release workflow zips. A tag `v*` publishes it as a GitHub Release.
+Writes one folder per browser:
+
+| Folder | Manifest | Load it with |
+|---|---|---|
+| `dist/chrome/` | the same file minus `browser_specific_settings`, which Chrome warns about | `chrome://extensions` → Load unpacked |
+| `dist/firefox/` | the same file, keeping `browser_specific_settings.gecko.id` so Firefox accepts it | `about:debugging` → Load Temporary Add-on |
+
+The scripts are identical in both: `globalThis.browser ?? globalThis.chrome` picks whichever namespace the browser exposes, and `activeTab` plus `scripting` cover the one page the extension reads.
+
+`npm test` needs no build. A tag `v*` runs the release workflow: test, build, zip both folders, publish four assets.
 
 ## Test
 
