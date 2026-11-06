@@ -1,0 +1,14 @@
+{
+  "name": "fenrirealm-nu-import-extension",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome and Firefox extension: turn an open Novel Updates series page into the Fenrir Realm import JSON.",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "vitest": "^3.2.4"
+  }
+}
