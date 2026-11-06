@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Fenrir Realm — Novel Updates page JSON",
+  "name": "Novel Updates page JSON",
   "version": "1.0.0",
-  "description": "Turns the open Novel Updates series page into the JSON the Fenrir Realm admin series form reads.",
+  "description": "Turns the open Novel Updates series page into one JSON object a series form can fill from.",
   "permissions": ["activeTab", "scripting", "clipboardWrite"],
   "action": {
     "default_title": "Copy this series as JSON",
@@ -10,7 +10,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "nu-import@fenrirealm.com",
+      "id": "nu-page-json@iniznet",
       "strict_min_version": "115.0"
     }
   }

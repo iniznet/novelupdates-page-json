@@ -1,8 +1,7 @@
 import { extractSeriesPage } from './extract.js';
 
 /**
- * Read the active tab, show what was found, put the JSON on the clipboard
- * (iniznet/fenrirealm-tracker#588).
+ * Read the active tab, show what was found, put the JSON on the clipboard.
  *
  * No network, no storage, no login: the page is read in the tab the staff member
  * already has open, and only the extracted fields leave it.
@@ -82,7 +81,7 @@ copyButton.addEventListener('click', async () => {
 
 	try {
 		await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-		say('Copied. Paste it into the series form under "Have the page JSON from the extension?".');
+		say('Copied. Paste it into the series form.');
 	} catch (error) {
 		say(`Could not copy: ${error.message}`, true);
 	}
