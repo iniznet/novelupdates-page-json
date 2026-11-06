@@ -4,7 +4,10 @@
  *
  * `extractSeriesPage` is self-contained on purpose: Chrome and Firefox serialize a
  * function's source when it is injected with scripting.executeScript, so it must
- * not close over a module-scope helper. Everything lives inside it.
+ * not close over anything at module scope. A closed-over name becomes a
+ * ReferenceError in the page, and the popup then reports "not a series page"
+ * instead of the real fault. `SCHEMA` is exported for the tests, and the same
+ * literal sits inside the function because nothing else survives the trip.
  *
  * The selectors mirror the consumer's server-side parser: one page shape, two
  * readers, and a golden fixture that fails when they drift.
@@ -15,6 +18,9 @@ export function extractSeriesPage(doc, sourceUrl) {
 	doc = doc || (typeof document === 'undefined' ? null : document);
 
 	if (!doc) return null;
+
+	// The function's own copy: module scope does not exist in the page.
+	const schema = 'nu.series.page/1';
 
 	const LIMITS = {
 		title: 512,
@@ -142,7 +148,7 @@ export function extractSeriesPage(doc, sourceUrl) {
 	if (slug === '') return null;
 
 	return {
-		schema: SCHEMA,
+		schema,
 		source_url: 'https://www.novelupdates.com/series/' + slug + '/',
 		title,
 		alt_titles: altTitles,
