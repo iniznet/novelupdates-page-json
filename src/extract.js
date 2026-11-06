@@ -1,6 +1,6 @@
 /**
  * Novel Updates series page -> one JSON object a series form can fill from
- * (`schema: fenrir.nu.series/1`).
+ * (`schema: nu.series.page/1`).
  *
  * `extractSeriesPage` is self-contained on purpose: Chrome and Firefox serialize a
  * function's source when it is injected with scripting.executeScript, so it must
@@ -9,7 +9,7 @@
  * The selectors mirror the consumer's server-side parser: one page shape, two
  * readers, and a golden fixture that fails when they drift.
  */
-export const SCHEMA = 'fenrir.nu.series/1';
+export const SCHEMA = 'nu.series.page/1';
 
 export function extractSeriesPage(doc, sourceUrl) {
 	doc = doc || (typeof document === 'undefined' ? null : document);
