@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Chrome and Firefox extension: turn an open Novel Updates series page into one JSON object.",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "build": "node scripts/package.mjs"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",

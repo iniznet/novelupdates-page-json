@@ -24,13 +24,13 @@ It reads the page in your own browser, where you are already signed in and past 
 1. Open a series page on Novel Updates, for example `https://www.novelupdates.com/series/example-series/`.
 2. Click the extension button. It shows the title and how many genres and tags it found.
 3. Press **Copy JSON**.
-4. Paste it into whatever form reads the `fenrir.nu.series/1` payload.
+4. Paste it into whatever form reads the `nu.series.page/1` payload.
 
 Nothing is saved anywhere until the form you paste into submits.
 
 ## The payload
 
-One object, `schema: "fenrir.nu.series/1"`:
+One object, `schema: "nu.series.page/1"`:
 
 | Key | From the page |
 |---|---|
@@ -48,6 +48,14 @@ One object, `schema: "fenrir.nu.series/1"`:
 Names stay in Novel Updates' own vocabulary: the consumer maps them to its own ids, so the extension never guesses a local id. Caps are the consumer's: 512-character title, 20 alternative names, 100 genres, 100 tags, 200 KB of synopsis.
 
 `description_html` is deliberately not sanitized here. The server that stores it owns that allowlist, and a second sanitizer in a client would drift.
+
+## Build
+
+```bash
+npm run build
+```
+
+Stages `manifest.json`, `src/` and this README in `dist/`, which is what the release workflow zips. A tag `v*` publishes it as a GitHub Release.
 
 ## Test
 

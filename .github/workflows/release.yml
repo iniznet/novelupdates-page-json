@@ -1,0 +1,54 @@
+name: Release
+
+# A tag publishes a release; the manual run exists so a release can be rebuilt
+# without moving a tag. Both take the same path: test, stage, zip, publish.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish, for example v1.0.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Stage the extension
+        run: npm run build
+
+      - name: Zip
+        run: |
+          cd dist
+          zip -r "../novelupdates-page-json-${RELEASE_TAG}.zip" .
+          cd ..
+          ls -l "novelupdates-page-json-${RELEASE_TAG}.zip"
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${RELEASE_TAG}" "novelupdates-page-json-${RELEASE_TAG}.zip" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "${RELEASE_TAG}" \
+            --generate-notes
