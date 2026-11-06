@@ -49,6 +49,22 @@ describe('extractSeriesPage', () => {
 		}
 	});
 
+	it('survives the trip into the page, where module scope does not exist', () => {
+		// Chrome and Firefox rebuild the function from its source and run it in the
+		// page: any name it closes over turns into a ReferenceError, the injection
+		// reports nothing, and the popup says "not a series page". Rebuilding it here
+		// the same way keeps that failure in the suite instead of in a browser.
+		const injected = new Function(
+			'doc',
+			'sourceUrl',
+			`return (${extractSeriesPage.toString()})(doc, sourceUrl);`
+		)(docOf(), URL_ON_NU);
+
+		expect(injected).not.toBeNull();
+		expect(injected.schema).toBe(SCHEMA);
+		expect(injected.title).toBe(extractSeriesPage(docOf()).title);
+	});
+
 	it('ships the synopsis as the page holds it, sanitizing nothing itself', () => {
 		const page = extractSeriesPage(docOf());
 
