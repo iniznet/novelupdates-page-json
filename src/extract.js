@@ -1,13 +1,13 @@
 /**
- * Novel Updates series page -> the JSON the Fenrir Realm panel reads
- * (iniznet/fenrirealm-tracker#588, contract owned by fenrirealm-tracker#586).
+ * Novel Updates series page -> one JSON object a series form can fill from
+ * (`schema: fenrir.nu.series/1`).
  *
  * `extractSeriesPage` is self-contained on purpose: Chrome and Firefox serialize a
  * function's source when it is injected with scripting.executeScript, so it must
  * not close over a module-scope helper. Everything lives inside it.
  *
- * The selectors are the backend parser's own list (SeriesPageParser): one page
- * shape, two readers, and a golden fixture that fails when they drift.
+ * The selectors mirror the consumer's server-side parser: one page shape, two
+ * readers, and a golden fixture that fails when they drift.
  */
 export const SCHEMA = 'fenrir.nu.series/1';
 
